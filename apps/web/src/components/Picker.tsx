@@ -70,7 +70,7 @@ export default function Picker({ a: initialA = null, b: initialB = null }: Props
       <div className="flex justify-center my-3">
         <button
           type="button"
-          className="btn btn-circle brutal w-14 h-14 bg-base-100 text-base-content hover:bg-base-200 disabled:opacity-60"
+          className="btn btn-circle w-14 h-14 border-2 border-neutral shadow-none bg-base-100 text-base-content hover:bg-base-200 disabled:opacity-60"
           onClick={swap}
           disabled={!a && !b}
           aria-label={a && b ? `Swap: ${b.name} with the market cap of ${a.name}` : 'Swap assets'}
