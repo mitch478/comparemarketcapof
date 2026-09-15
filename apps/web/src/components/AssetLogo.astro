@@ -1,0 +1,19 @@
+---
+interface Props {
+  src: string | null;
+  name: string;
+  size?: number;
+  class?: string;
+  eager?: boolean;
+}
+const { src, name, size = 28, class: cls = '', eager = false } = Astro.props;
+const initials = name.slice(0, 2).toUpperCase();
+---
+{src ? (
+  <img src={src} alt="" width={size} height={size} class:list={['logo shrink-0', cls]} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+) : (
+  <span class:list={['logo shrink-0 inline-flex items-center justify-center font-ui font-semibold text-xs bg-base-200 text-base-content', cls]} style={`width:${size}px;height:${size}px`} aria-hidden="true">{initials}</span>
+)}
+<style>
+  .logo { border-radius: 9999px; border: 2px solid var(--color-neutral); background: var(--color-base-100); object-fit: contain; }
+</style>

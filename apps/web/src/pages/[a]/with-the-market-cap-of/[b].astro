@@ -1,0 +1,45 @@
+---
+import { compare, comparisonCopy } from '@cmc/core';
+import Base from '../../../layouts/Base.astro';
+import Seo from '../../../components/Seo.astro';
+import CompareCard from '../../../components/CompareCard.astro';
+import ShareRow from '../../../components/ShareRow.astro';
+import LinkBlock from '../../../components/LinkBlock.astro';
+import DataStamp from '../../../components/DataStamp.astro';
+import { findAsset, loadSnapshot, topAssets } from '../../../lib/data';
+import { cacheHeaders } from '../../../lib/http';
+import { comparePath, hubPath } from '../../../lib/routes';
+
+const snap = await loadSnapshot();
+const a = findAsset(snap, Astro.params.a);
+const b = findAsset(snap, Astro.params.b);
+if (!a || !b) return new Response(null, { status: 404 });
+if (a.id === b.id) return Astro.redirect(hubPath(a.slug), 302);
+
+const c = compare(a, b, snap.updatedAt);
+const t = comparisonCopy(c);
+cacheHeaders(Astro.response.headers);
+
+const url = new URL(Astro.url.pathname, Astro.site).toString();
+const moreForA = topAssets(snap, 12, a.id).filter((x) => x.id !== b.id).slice(0, 10)
+  .map((x) => ({ href: comparePath(a.slug, x.slug), label: `${a.name} with the market cap of ${x.name}` }));
+const othersAtB = topAssets(snap, 12, b.id).filter((x) => x.id !== a.id).slice(0, 10)
+  .map((x) => ({ href: comparePath(x.slug, b.slug), label: `${x.name} with the market cap of ${b.name}` }));
+---
+<Base title={t.title}>
+  <Fragment slot="head"><Seo title={t.title} description={t.description} canonical={url} /></Fragment>
+
+  <h1 class="font-display text-h1 mt-10 leading-tight">{t.h1}</h1>
+  <div class="mt-8"><CompareCard comparison={c} /></div>
+  <div class="mt-8"><ShareRow url={url} text={t.shareText} /></div>
+
+  <!-- <AffiliateSlot placement="comparison" /> — Phase 5, ships empty -->
+
+  <nav aria-label="More comparisons" class="mt-12 flex flex-col gap-8">
+    <LinkBlock heading={`More comparisons for ${a.name}`} links={moreForA} />
+    <LinkBlock heading={`Other assets at ${b.name}'s market cap`} links={othersAtB} />
+    <a class="btn btn-primary brutal self-start font-ui" href={comparePath(b.slug, a.slug)}>Reverse: {b.name} at {a.name}'s market cap</a>
+  </nav>
+
+  <div class="mt-10"><DataStamp updatedAt={snap.updatedAt} source={snap.source} /></div>
+</Base>

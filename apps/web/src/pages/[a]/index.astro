@@ -1,0 +1,62 @@
+---
+import { formatCap, formatPrice, formatSupply } from '@cmc/core';
+import Base from '../../layouts/Base.astro';
+import Seo from '../../components/Seo.astro';
+import AssetLogo from '../../components/AssetLogo.astro';
+import LinkBlock from '../../components/LinkBlock.astro';
+import DataStamp from '../../components/DataStamp.astro';
+import { findAsset, loadSnapshot, topAssets } from '../../lib/data';
+import { cacheHeaders } from '../../lib/http';
+import { comparePath } from '../../lib/routes';
+
+const snap = await loadSnapshot();
+const a = findAsset(snap, Astro.params.a);
+if (!a) return new Response(null, { status: 404 });
+cacheHeaders(Astro.response.headers);
+
+const top = topAssets(snap, 21, a.id).slice(0, 20);
+const title = `${a.name} (${a.symbol}) market cap comparisons`;
+const description = `${a.name} is #${a.rank} by market cap at ${formatCap(a.marketCap)}, trading at ${formatPrice(a.price)}. See what ${a.symbol} would be worth with the market cap of Bitcoin, Ethereum and other top assets.`;
+
+const stats: Array<[string, string]> = [
+  ['Price', formatPrice(a.price)],
+  ['Market cap', formatCap(a.marketCap)],
+  ['Fully diluted', formatCap(a.fdv)],
+  ['Circulating supply', formatSupply(a.circulatingSupply, a.symbol)],
+  ['Total supply', formatSupply(a.totalSupply, a.symbol)],
+  ['All-time high', formatPrice(a.ath)],
+];
+---
+<Base title={title}>
+  <Fragment slot="head"><Seo title={title} description={description} /></Fragment>
+
+  <div class="mt-10 flex items-center gap-4">
+    <AssetLogo src={a.image} name={a.name} size={56} eager />
+    <div>
+      <h1 class="font-display text-h1 leading-tight">{a.name}</h1>
+      <p class="font-ui text-ui text-muted">{a.symbol} · rank #{a.rank}</p>
+    </div>
+  </div>
+
+  <dl class="mt-8 grid grid-cols-2 gap-x-4 gap-y-4 card bg-base-200 border-2 border-neutral shadow-card p-6">
+    {stats.map(([k, v]) => (
+      <div>
+        <dt class="font-ui text-sm uppercase text-muted">{k}</dt>
+        <dd class="num font-bold text-lg">{v}</dd>
+      </div>
+    ))}
+  </dl>
+
+  <div class="mt-8">
+    <a class="btn btn-primary btn-lg brutal font-ui w-full" href={comparePath(a.slug, a.id === 'bitcoin' ? 'ethereum' : 'bitcoin')}>
+      {a.name} with the market cap of {a.id === 'bitcoin' ? 'Ethereum' : 'Bitcoin'} →
+    </a>
+  </div>
+
+  <nav aria-label="Comparisons" class="mt-12 flex flex-col gap-8">
+    <LinkBlock heading={`${a.name} with the market cap of…`} links={top.map((x) => ({ href: comparePath(a.slug, x.slug), label: `${x.name} (${x.symbol}) · ${formatCap(x.marketCap)}` }))} />
+    <LinkBlock heading={`…with the market cap of ${a.name}`} links={top.map((x) => ({ href: comparePath(x.slug, a.slug), label: `${x.name} at ${a.symbol}'s cap` }))} />
+  </nav>
+
+  <div class="mt-10"><DataStamp updatedAt={snap.updatedAt} source={snap.source} /></div>
+</Base>

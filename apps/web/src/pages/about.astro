@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import Seo from '../components/Seo.astro';
+export const prerender = true;
+---
+<Base title="About">
+  <Fragment slot="head"><Seo title="About" description="How comparemarketcapof works: the maths, the data source and the refresh schedule." /></Fragment>
+  <h1 class="font-display text-h1 mt-10">About</h1>
+  <div class="mt-4 font-body text-base flex flex-col gap-4">
+    <p>comparemarketcapof answers one question: what would the price of asset A be if it had the market cap of asset B?</p>
+    <p>The implied price is B's market cap divided by A's circulating supply. The multiplier is B's market cap divided by A's. Where both assets publish a total supply, a fully diluted variant is shown too.</p>
+    <p>Prices and supplies come from CoinGecko and are refreshed hourly. Every page shows the time of the data it was built from.</p>
+    <p>Nothing here is financial advice.</p>
+  </div>
+</Base>

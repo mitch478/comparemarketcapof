@@ -7,8 +7,12 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://comparemarketcapof.com',
+  trailingSlash: 'never',
+  build: { format: 'file' },
   // Server-rendered by default; static pages opt in with `export const prerender = true`.
   output: 'server',
+  // No sessions: nothing on the site is per-user.
+  session: false,
   adapter: cloudflare({
     imageService: 'compile',
     // Share local KV state with apps/cron so `pnpm --filter @cmc/cron seed` feeds astro dev too.

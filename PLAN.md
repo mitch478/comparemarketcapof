@@ -49,7 +49,12 @@ How Nathan tests: run `pnpm seed`, run the sample script, hit `POST /refresh` lo
 
 ---
 
-## Phase 2 — Pages
+## Phase 2 — Pages  ← DONE 2026-09-15, awaiting Nathan's test
+
+Built: home, comparison, hub, /coins, about, privacy, 404; React picker island (searchable combobox, lazy list via `/api/picker.json`, keyboard + ARIA); shared components (CompareCard, StatRows, LinkBlock, ShareRow, DataStamp, Seo); cache headers on SSR pages; A===B → 302 to hub; invalid slug → 404 before touching data; sessions disabled; Playwright smoke (3 tests, mobile viewport).
+
+Carried to Phase 3: Worker-generated responses are NOT cached by Cloudflare's CDN on `s-maxage` alone — add a Cache API layer in middleware so the 15-minute window actually holds. Self-host fonts. Delete `/dev/design`.
+
 
 - Home `/` (SOL → BTC default, live result, popular grid), comparison `/[a]/with-the-market-cap-of/[b]`, hub `/[a]`, index `/coins`.
 - React island: searchable combobox over all assets (DaisyUI dropdown/menu primitives, ≥44px rows, keyboard + screen reader).

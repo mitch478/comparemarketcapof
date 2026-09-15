@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import Seo from '../components/Seo.astro';
+export const prerender = true;
+---
+<Base title="Privacy">
+  <Fragment slot="head"><Seo title="Privacy" description="comparemarketcapof sets no cookies and collects no personal data." /></Fragment>
+  <h1 class="font-display text-h1 mt-10">Privacy</h1>
+  <div class="mt-4 font-body text-base flex flex-col gap-4">
+    <p>This site sets no cookies and has no accounts.</p>
+    <p>Page views are counted with cookieless analytics that store no personal data and cannot identify you.</p>
+    <p>Links to third parties are marked. If a link is sponsored, it says so next to the link.</p>
+  </div>
+</Base>

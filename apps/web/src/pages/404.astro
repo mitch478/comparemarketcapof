@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import Seo from '../components/Seo.astro';
+import { coinsPath } from '../lib/routes';
+---
+<Base title="Not found">
+  <Fragment slot="head"><Seo title="Not found" description="That asset or page doesn't exist." noindex /></Fragment>
+  <h1 class="font-display text-h1 mt-10">Not found</h1>
+  <p class="mt-4 font-ui text-lg">That asset isn't in the top list, or the address is wrong.</p>
+  <p class="mt-6 font-ui"><a class="btn btn-primary brutal" href={coinsPath()}>Browse all assets</a></p>
+</Base>

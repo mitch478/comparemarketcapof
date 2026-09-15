@@ -1,0 +1,43 @@
+---
+import type { Comparison } from '@cmc/core';
+import { comparisonCopy, formatMultiplier, formatPrice } from '@cmc/core';
+import Picker from './Picker';
+import StatRows from './StatRows.astro';
+
+interface Props { comparison: Comparison }
+const { comparison: c } = Astro.props;
+const t = comparisonCopy(c);
+---
+<section aria-label="Comparison" class="card bg-primary text-primary-content border-2 border-neutral shadow-card">
+  <div class="card-body px-6 pt-8 pb-8">
+    <Picker
+      client:idle
+      a={{ slug: c.a.slug, symbol: c.a.symbol, name: c.a.name, image: c.a.image }}
+      b={{ slug: c.b.slug, symbol: c.b.symbol, name: c.b.name, image: c.b.image }}
+    />
+
+    <p class="mt-9 text-center font-body font-bold text-base">{t.resultLine}</p>
+    <p class="num mt-3 text-center font-body font-bold text-hero-mobile sm:text-hero text-accent break-words" data-implied-price>
+      {t.impliedPriceText}
+    </p>
+    {t.multiplierLine && <p class="num mt-2 text-center font-body text-lg">{t.multiplierLine}</p>}
+
+    {c.status === 'ok' && c.impliedFdvPrice != null ? (
+      <p class="mt-6 text-center font-ui text-sm opacity-80">
+        Based on circulating supply. On fully diluted supply: <span class="num">{formatPrice(c.impliedFdvPrice)}</span>
+        {c.fdvMultiplier != null && <span class="num"> ({formatMultiplier(c.fdvMultiplier)})</span>}.
+      </p>
+    ) : (
+      <p class="mt-6 text-center font-ui text-sm opacity-80">Based on circulating supply.</p>
+    )}
+    {c.notes.length > 0 && (
+      <ul class="mt-3 text-center font-ui text-sm opacity-90" role="note">
+        {c.notes.map((n) => <li>{n}</li>)}
+      </ul>
+    )}
+
+    <div class="mt-10">
+      <StatRows assets={[c.a, c.b]} />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,19 @@
+---
+interface Props {
+  heading: string;
+  links: Array<{ href: string; label: string }>;
+}
+const { heading, links } = Astro.props;
+---
+{links.length > 0 && (
+  <section>
+    <h2 class="font-ui font-semibold text-lg">{heading}</h2>
+    <ul class="mt-2 flex flex-col">
+      {links.map((l) => (
+        <li>
+          <a class="flex items-center min-h-11 py-2 border-b border-base-300 font-ui text-base underline decoration-2 underline-offset-4 hover:bg-base-200" href={l.href}>{l.label}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

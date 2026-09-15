@@ -1,0 +1,9 @@
+---
+import { formatUtcTime } from '@cmc/core';
+interface Props { updatedAt: string | null; source?: string | null }
+const { updatedAt, source } = Astro.props;
+---
+<p class="num font-ui text-xs text-muted">
+  {updatedAt ? `Data as of ${formatUtcTime(updatedAt)}` : 'Live data is temporarily unavailable'}
+  {source && source !== 'coingecko' ? ` · ${source}` : ''} · Based on circulating supply · Not financial advice
+</p>

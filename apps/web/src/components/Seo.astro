@@ -1,0 +1,25 @@
+---
+/**
+ * Per-page metadata. Phase 3 adds OG image, JSON-LD and canonical handling; the props are
+ * already here so pages don't change shape later.
+ */
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string | undefined;
+  noindex?: boolean;
+}
+const { title, description, canonical, noindex = false } = Astro.props;
+const fullTitle = title.includes('comparemarketcapof') ? title : `${title} | comparemarketcapof`;
+const url = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+---
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={url} />
+{noindex && <meta name="robots" content="noindex" />}
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={url} />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="comparemarketcapof" />
+<meta name="twitter:card" content="summary_large_image" />

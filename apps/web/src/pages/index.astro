@@ -1,11 +1,65 @@
 ---
+import { compare, comparisonCopy, formatCap } from '@cmc/core';
 import Base from '../layouts/Base.astro';
+import Seo from '../components/Seo.astro';
+import CompareCard from '../components/CompareCard.astro';
+import DataStamp from '../components/DataStamp.astro';
+import { DEFAULT_A, DEFAULT_B, findAsset, loadSnapshot, topAssets } from '../lib/data';
+import { cacheHeaders } from '../lib/http';
+import { coinsPath, comparePath } from '../lib/routes';
+
+const snap = await loadSnapshot();
+cacheHeaders(Astro.response.headers);
+const a = findAsset(snap, DEFAULT_A) ?? snap.assets[1];
+const b = findAsset(snap, DEFAULT_B) ?? snap.assets[0];
+const c = a && b ? compare(a, b, snap.updatedAt) : null;
+const t = c ? comparisonCopy(c) : null;
+
+const top = topAssets(snap, 8);
+const popular: Array<[string, string]> = [];
+for (const x of top.slice(1, 8)) popular.push([x.slug, top[0]!.slug]);      // X at BTC
+for (const x of top.slice(2, 6)) popular.push([x.slug, top[1]!.slug]);      // X at ETH
+const byId = snap.byId;
+
+const title = 'Compare market cap of any two cryptocurrencies';
+const description = 'What would Solana be worth with the market cap of Bitcoin? Pick any two of the top 500 crypto assets and see the implied price and multiplier, updated hourly.';
 ---
-<Base title="comparemarketcapof — Phase 0 scaffold">
-  <h1 class="font-display text-h1 mt-10">Phase 0 scaffold</h1>
-  <p class="font-ui text-lg mt-4">The real home page arrives in Phase 2.</p>
-  <ul class="mt-6 font-ui text-base list-disc pl-5">
-    <li><a class="underline" href="/dev/design">/dev/design</a> — static comparison-page mock (SOL at BTC)</li>
-    <li><a class="underline" href="/og/dev.png">/og/dev.png</a> — workers-og render spike</li>
-  </ul>
+<Base title={title}>
+  <Fragment slot="head"><Seo title={title} description={description} /></Fragment>
+
+  <h1 class="font-display text-h1 mt-10 leading-tight">Compare market cap of any two cryptocurrencies</h1>
+  <p class="mt-3 font-ui text-lg">What would asset A be worth with the market cap of asset B? Pick two and find out.</p>
+  {t && <h2 class="mt-6 font-ui font-semibold text-lg">{t.h1}</h2>}
+
+  {c ? (
+    <div class="mt-8"><CompareCard comparison={c} /></div>
+  ) : (
+    <div class="mt-8 card bg-base-200 border-2 border-neutral shadow-card p-6 font-ui">
+      <p>Live data is being refreshed. Please try again in a few minutes.</p>
+    </div>
+  )}
+
+  {c && t && (
+    <p class="mt-4 font-ui text-ui"><a class="underline decoration-2 underline-offset-4" href={comparePath(c.a.slug, c.b.slug)}>Open this comparison →</a></p>
+  )}
+
+  <section class="mt-12">
+    <h2 class="font-ui font-semibold text-lg">Popular comparisons</h2>
+    <ul class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {popular.map(([x, y]) => {
+        const ax = byId.get(x)!; const ay = byId.get(y)!;
+        return (
+          <li>
+            <a href={comparePath(x, y)} class="card bg-base-100 border-2 border-neutral shadow-pill p-4 font-ui hover:bg-base-200 block">
+              <span class="font-semibold">{ax.name}</span> <span class="text-muted">with the market cap of</span> <span class="font-semibold">{ay.name}</span>
+              <span class="block num text-sm text-muted mt-1">{formatCap(ax.marketCap)} → {formatCap(ay.marketCap)}</span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+    <p class="mt-4 font-ui text-ui"><a class="underline decoration-2 underline-offset-4" href={coinsPath()}>Browse all {snap.count} assets →</a></p>
+  </section>
+
+  <div class="mt-10"><DataStamp updatedAt={snap.updatedAt} source={snap.source} /></div>
 </Base>

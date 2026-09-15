@@ -1,0 +1,36 @@
+---
+import type { Asset } from '@cmc/core';
+import { formatCap, formatPrice, formatSupply } from '@cmc/core';
+import AssetLogo from './AssetLogo.astro';
+import { hubPath } from '../lib/routes';
+
+interface Props { assets: Asset[] }
+const { assets } = Astro.props;
+---
+<dl class="flex flex-col gap-6">
+  {assets.map((c) => (
+    <div class="flex items-start gap-3">
+      <a href={hubPath(c.slug)} class="shrink-0" aria-label={`${c.name} market cap page`}>
+        <AssetLogo src={c.image} name={c.name} size={41} />
+      </a>
+      <div class="grid grid-cols-2 gap-x-4 gap-y-2 w-full">
+        <div class="col-span-2 font-ui text-ui font-semibold">
+          <a href={hubPath(c.slug)} class="underline decoration-2 underline-offset-4">{c.name}</a>
+          <span class="opacity-80"> · {c.symbol} · #{c.rank}</span>
+        </div>
+        <div>
+          <dt class="font-ui text-sm uppercase opacity-80">Price</dt>
+          <dd class="num font-bold text-base">{formatPrice(c.price)}</dd>
+        </div>
+        <div class="text-right">
+          <dt class="font-ui text-sm uppercase opacity-80">Market cap</dt>
+          <dd class="num font-bold text-base">{formatCap(c.marketCap)}</dd>
+        </div>
+        <div class="col-span-2">
+          <dt class="font-ui text-sm uppercase opacity-80">Circulating supply</dt>
+          <dd class="num font-bold text-base">{formatSupply(c.circulatingSupply, c.symbol)}</dd>
+        </div>
+      </div>
+    </div>
+  ))}
+</dl>

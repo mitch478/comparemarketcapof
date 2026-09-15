@@ -1,0 +1,51 @@
+---
+import { formatCap, formatPrice } from '@cmc/core';
+import Base from '../layouts/Base.astro';
+import Seo from '../components/Seo.astro';
+import AssetLogo from '../components/AssetLogo.astro';
+import DataStamp from '../components/DataStamp.astro';
+import { loadSnapshot } from '../lib/data';
+import { cacheHeaders } from '../lib/http';
+import { hubPath } from '../lib/routes';
+
+const snap = await loadSnapshot();
+cacheHeaders(Astro.response.headers);
+const title = `Top ${snap.count} cryptocurrencies by market cap`;
+const description = `All ${snap.count} assets you can compare on comparemarketcapof, ranked by market cap with current price.`;
+---
+<Base title={title}>
+  <Fragment slot="head"><Seo title={title} description={description} /></Fragment>
+  <h1 class="font-display text-h1 mt-10 leading-tight">{title}</h1>
+  <p class="mt-2 font-ui text-ui text-muted">Tap any asset for its comparisons.</p>
+
+  <div class="mt-6 overflow-x-auto">
+    <table class="table table-sm font-ui w-full">
+      <thead>
+        <tr class="text-muted">
+          <th class="num text-right">#</th>
+          <th>Asset</th>
+          <th class="num text-right">Price</th>
+          <th class="num text-right">Market cap</th>
+        </tr>
+      </thead>
+      <tbody>
+        {snap.assets.map((a) => (
+          <tr class="hover:bg-base-200">
+            <td class="num text-right text-muted">{a.rank}</td>
+            <td>
+              <a href={hubPath(a.slug)} class="flex items-center gap-2 min-h-11 underline decoration-2 underline-offset-4">
+                <AssetLogo src={a.image} name={a.name} size={24} />
+                <span class="font-semibold">{a.name}</span>
+                <span class="text-muted">{a.symbol}</span>
+              </a>
+            </td>
+            <td class="num text-right">{formatPrice(a.price)}</td>
+            <td class="num text-right">{formatCap(a.marketCap)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  {snap.count === 0 && <p class="mt-6 font-ui">The asset list is being refreshed. Please try again in a few minutes.</p>}
+  <div class="mt-10"><DataStamp updatedAt={snap.updatedAt} source={snap.source} /></div>
+</Base>
