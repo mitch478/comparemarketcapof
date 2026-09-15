@@ -37,7 +37,7 @@ small sizes.
 Every numeric element carries `font-feature-settings: "tnum"` (class `num`) so digits
 don't shift width when values refresh.
 
-Scale (px): **64** hero implied price (48 on mobile) / **24** H1 / 20 / 16 / 15 / 13 / 12.
+Scale (px): **52** hero implied price (40 on mobile; was 64/48, reduced 2026-09-15 at Nathan's request) / **24** H1 / 20 / 16 / 15 / 13 / 12.
 
 ## Shape and depth
 
@@ -53,7 +53,7 @@ Scale (px): **64** hero implied price (48 on mobile) / **24** H1 / 20 / 16 / 15 
 1. **H1** — the dynamic sentence: "Solana with the market cap of Bitcoin". Bungee 24.
 2. **Compare card** — picker A, "VS", picker B.
 3. **Result line** (white, Inter 16): "If SOL reached BTC's current market cap, one SOL would be worth" — or "would drop to" when the multiplier is below 1.
-4. **Implied price** — 64px lime, tabular figures. The single most important element on the page.
+4. **Implied price** — 52px lime (40 mobile), tabular figures. The single most important element on the page.
 5. **Multiplier** — 20px white, own line: "17× today's price" / "0.31× today's price".
 6. **Stat rows** per coin: real logo from the API, price, market cap, circulating supply. Plus an FDV variant line when both assets have a total supply, and a "based on circulating supply" note.
 7. **Share row** — copy link, share to X, download image.
@@ -74,7 +74,7 @@ Scale (px): **64** hero implied price (48 on mobile) / **24** H1 / 20 / 16 / 15 
 Searchable combobox over all 500 assets. Type-ahead on symbol and name; each row shows
 rank, logo, name, symbol and market cap; rows ≥ 44px tall; fully keyboard navigable
 (arrow keys, Enter, Escape) and announced to screen readers; closes on selection and on
-outside tap. Default pair on the home page: **SOL → BTC**.
+outside tap. Home page starts with **both pickers empty** (changed 2026-09-15); choosing the second asset navigates to the comparison page.
 
 ## Number formatting
 

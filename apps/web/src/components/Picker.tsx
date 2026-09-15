@@ -4,7 +4,7 @@ import { formatCap } from '@cmc/core';
 import { comparePath } from '../lib/routes';
 
 interface Selected { slug: string; symbol: string; name: string; image: string | null }
-interface Props { a: Selected; b: Selected }
+interface Props { a?: Selected | null; b?: Selected | null }
 
 let listPromise: Promise<PickerAsset[]> | null = null;
 function loadList(): Promise<PickerAsset[]> {
@@ -35,18 +35,41 @@ function search(list: PickerAsset[], q: string): PickerAsset[] {
  * Two searchable comboboxes over the whole snapshot. Selecting navigates to the
  * server-rendered comparison page, so the URL is always the source of truth.
  */
-export default function Picker({ a, b }: Props) {
+export default function Picker({ a: initialA = null, b: initialB = null }: Props) {
+  const [a, setA] = useState<Selected | null>(initialA);
+  const [b, setB] = useState<Selected | null>(initialB);
+  const [openSide, setOpenSide] = useState<'a' | 'b' | null>(null);
+
+  function pick(side: 'a' | 'b', asset: PickerAsset) {
+    const sel: Selected = { slug: asset.slug, symbol: asset.symbol, name: asset.name, image: asset.image };
+    const na = side === 'a' ? sel : a;
+    const nb = side === 'b' ? sel : b;
+    if (side === 'a') setA(sel); else setB(sel);
+    if (na && nb) {
+      setOpenSide(null);
+      window.location.href = comparePath(na.slug, nb.slug);
+    } else {
+      // Only one side chosen yet: open the other picker so the second choice is one tap away.
+      setOpenSide(side === 'a' ? 'b' : 'a');
+    }
+  }
+
   return (
     <div className="flex flex-col items-stretch">
-      <Combobox side="a" selected={a} other={b} />
+      <Combobox side="a" selected={a} open={openSide === 'a'} setOpen={(o) => setOpenSide(o ? 'a' : null)} onPick={(x) => pick('a', x)} />
       <div className="num font-bold text-[33px] text-neutral text-center my-4" aria-hidden="true">VS</div>
-      <Combobox side="b" selected={b} other={a} />
+      <Combobox side="b" selected={b} open={openSide === 'b'} setOpen={(o) => setOpenSide(o ? 'b' : null)} onPick={(x) => pick('b', x)} />
     </div>
   );
 }
 
-function Combobox({ side, selected, other }: { side: 'a' | 'b'; selected: Selected; other: Selected }) {
-  const [open, setOpen] = useState(false);
+function Combobox({ side, selected, open, setOpen, onPick }: {
+  side: 'a' | 'b';
+  selected: Selected | null;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  onPick: (asset: PickerAsset) => void;
+}) {
   const [q, setQ] = useState('');
   const [list, setList] = useState<PickerAsset[] | null>(null);
   const [active, setActive] = useState(0);
@@ -75,9 +98,8 @@ function Combobox({ side, selected, other }: { side: 'a' | 'b'; selected: Select
   }, [active, open, listboxId]);
 
   function choose(asset: PickerAsset) {
-    setOpen(false);
-    const [na, nb] = side === 'a' ? [asset.slug, other.slug] : [other.slug, asset.slug];
-    window.location.href = comparePath(na, nb);
+    setQ('');
+    onPick(asset);
   }
 
   function onKey(e: React.KeyboardEvent) {
@@ -88,6 +110,7 @@ function Combobox({ side, selected, other }: { side: 'a' | 'b'; selected: Select
   }
 
   const label = side === 'a' ? 'Asset to reprice' : 'Market cap to use';
+  const buttonLabel = selected ? `${label}: ${selected.name} (${selected.symbol}). Change` : `${label}. Choose an asset`;
 
   return (
     <div ref={rootRef} className="relative w-full">
@@ -96,17 +119,21 @@ function Combobox({ side, selected, other }: { side: 'a' | 'b'; selected: Select
         className="btn btn-primary btn-lg brutal w-full justify-start gap-3 font-ui text-ui tracking-[1px]"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={`${label}: ${selected.name} (${selected.symbol}). Change`}
-        onClick={() => setOpen((o) => !o)}
+        aria-label={buttonLabel}
+        onClick={() => setOpen(!open)}
         onPointerEnter={() => void loadList()}
         onFocus={() => void loadList()}
         data-picker={side}
       >
-        {selected.image ? (
-          <img src={selected.image} alt="" width={28} height={28} className="rounded-full border-2 border-neutral bg-base-100" />
-        ) : null}
-        <span>{selected.symbol}</span>
-        <span className="opacity-80 font-normal truncate">{selected.name}</span>
+        {selected ? (
+          <>
+            {selected.image ? <img src={selected.image} alt="" width={28} height={28} className="rounded-full border-2 border-neutral bg-base-100" /> : null}
+            <span>{selected.symbol}</span>
+            <span className="opacity-80 font-normal truncate">{selected.name}</span>
+          </>
+        ) : (
+          <span className="font-normal opacity-90">{side === 'a' ? 'Choose an asset' : 'Choose a market cap'}</span>
+        )}
         <span aria-hidden="true" className="ml-auto">▾</span>
       </button>
 
@@ -139,7 +166,7 @@ function Combobox({ side, selected, other }: { side: 'a' | 'b'; selected: Select
                 key={r.id}
                 id={`${listboxId}-opt-${i}`}
                 role="option"
-                aria-selected={r.slug === selected.slug}
+                aria-selected={r.slug === selected?.slug}
                 className={`flex items-center gap-3 min-h-11 px-3 py-2 border-b border-base-300 cursor-pointer font-ui ${i === active ? 'bg-base-200' : ''}`}
                 onPointerMove={() => setActive(i)}
                 onClick={() => choose(r)}

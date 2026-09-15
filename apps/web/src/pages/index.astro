@@ -1,19 +1,15 @@
 ---
-import { compare, comparisonCopy, formatCap } from '@cmc/core';
+import { formatCap } from '@cmc/core';
 import Base from '../layouts/Base.astro';
 import Seo from '../components/Seo.astro';
-import CompareCard from '../components/CompareCard.astro';
+import Picker from '../components/Picker';
 import DataStamp from '../components/DataStamp.astro';
-import { DEFAULT_A, DEFAULT_B, findAsset, loadSnapshot, topAssets } from '../lib/data';
+import { loadSnapshot, topAssets } from '../lib/data';
 import { cacheHeaders } from '../lib/http';
 import { coinsPath, comparePath } from '../lib/routes';
 
 const snap = await loadSnapshot();
 cacheHeaders(Astro.response.headers);
-const a = findAsset(snap, DEFAULT_A) ?? snap.assets[1];
-const b = findAsset(snap, DEFAULT_B) ?? snap.assets[0];
-const c = a && b ? compare(a, b, snap.updatedAt) : null;
-const t = c ? comparisonCopy(c) : null;
 
 const top = topAssets(snap, 8);
 const popular: Array<[string, string]> = [];
@@ -29,19 +25,19 @@ const description = 'What would Solana be worth with the market cap of Bitcoin? 
 
   <h1 class="font-display text-h1 mt-10 leading-tight">Compare market cap of any two cryptocurrencies</h1>
   <p class="mt-3 font-ui text-lg">What would asset A be worth with the market cap of asset B? Pick two and find out.</p>
-  {t && <h2 class="mt-6 font-ui font-semibold text-lg">{t.h1}</h2>}
 
-  {c ? (
-    <div class="mt-8"><CompareCard comparison={c} /></div>
-  ) : (
-    <div class="mt-8 card bg-base-200 border-2 border-neutral shadow-card p-6 font-ui">
-      <p>Live data is being refreshed. Please try again in a few minutes.</p>
+  <section aria-label="Pick two assets" class="card mt-8 bg-primary text-primary-content border-2 border-neutral shadow-card">
+    <div class="card-body px-6 pt-8 pb-8">
+      {snap.count > 0 ? (
+        <>
+          <Picker client:idle />
+          <p class="mt-8 text-center font-ui text-sm opacity-90">Pick an asset, then the market cap to give it. The result opens on its own page.</p>
+        </>
+      ) : (
+        <p class="text-center font-ui">Live data is being refreshed. Please try again in a few minutes.</p>
+      )}
     </div>
-  )}
-
-  {c && t && (
-    <p class="mt-4 font-ui text-ui"><a class="underline decoration-2 underline-offset-4" href={comparePath(c.a.slug, c.b.slug)}>Open this comparison →</a></p>
-  )}
+  </section>
 
   <section class="mt-12">
     <h2 class="font-ui font-semibold text-lg">Popular comparisons</h2>

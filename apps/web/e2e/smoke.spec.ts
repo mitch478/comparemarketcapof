@@ -4,14 +4,19 @@ test('home → pick pair → comparison page', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Compare market cap');
 
-  // Open picker A and search by symbol
+  // Both pickers start empty
+  await expect(page.getByRole('button', { name: /Asset to reprice\. Choose/ })).toBeVisible();
   await page.getByRole('button', { name: /Asset to reprice/ }).click();
-  const box = page.getByRole('combobox', { name: /Asset to reprice/ });
-  await expect(box).toBeFocused();
-  await box.fill('eth');
-  const option = page.getByRole('option', { name: /Ethereum/ }).first();
-  await expect(option).toBeVisible();
-  await option.click();
+  const boxA = page.getByRole('combobox', { name: /Asset to reprice/ });
+  await expect(boxA).toBeFocused();
+  await boxA.fill('eth');
+  await page.getByRole('option', { name: /Ethereum/ }).first().click();
+
+  // Picker B opens automatically after the first choice
+  const boxB = page.getByRole('combobox', { name: /Market cap to use/ });
+  await expect(boxB).toBeFocused();
+  await boxB.fill('btc');
+  await page.getByRole('option', { name: /Bitcoin/ }).first().click();
 
   await page.waitForURL(/\/ethereum\/with-the-market-cap-of\/bitcoin$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ethereum with the market cap of Bitcoin');

@@ -98,9 +98,9 @@
   --font-ui: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --text-hero: 4rem;            /* 64 */
+  --text-hero: 3.25rem;         /* 52 */
   --text-hero--line-height: 1;
-  --text-hero-mobile: 3rem;     /* 48 */
+  --text-hero-mobile: 2.5rem;   /* 40 */
   --text-hero-mobile--line-height: 1;
   --text-h1: 1.5rem;            /* 24 */
   --text-h1--line-height: 1.2;
