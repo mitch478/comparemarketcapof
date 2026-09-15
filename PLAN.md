@@ -15,7 +15,7 @@ Stack decisions already locked in (from the brief plus what's installed and veri
 
 ---
 
-## Phase 0 — Scaffold, tokens, design mock  ← IN PROGRESS
+## Phase 0 — Scaffold, tokens, design mock  ← DONE 2026-09-15, awaiting Nathan's test
 
 Done and verified:
 - [x] Git repo, workspace, `.gitignore`, `.env.example`, base tsconfig, CI workflow.
@@ -24,12 +24,9 @@ Done and verified:
 - [x] `apps/web`: Astro config, Tailwind theme tokens, base layout, `/dev/design` mock page, `/og/dev.png` workers-og spike route.
 - [x] `DESIGN.md`.
 
-Remaining:
-- [ ] Fix `apps/web/wrangler.jsonc` for adapter 14: `"main": "@astrojs/cloudflare/entrypoints/server"`, drop the `assets` block, drop `platformProxy` from `astro.config.mjs`, replace `App.Locals` runtime typing with `cloudflare:workers` env typing.
-- [ ] Add DaisyUI 5: `@plugin "daisyui"` + custom `cmc` theme in `global.css`; rebuild the `/dev/design` mock on DaisyUI primitives (`btn`, `card`, `stat`, `dropdown`) with the neo-brutalist overrides.
-- [ ] `astro check` and `astro build` green; `/dev/design` and `/og/dev.png` render in `wrangler dev`.
-- [ ] Deploy both Workers to `*.workers.dev`.
-- [ ] Initial commit(s).
+Also done: adapter-14 config fix, DaisyUI 5 theme, mock rebuilt on DaisyUI, build green, both Workers deployed, committed.
+
+Live: https://comparemarketcapof-web.mcsltd.workers.dev and https://comparemarketcapof-cron.mcsltd.workers.dev
 
 How Nathan tests: open the two workers.dev URLs on a phone; check `/dev/design` in light and dark mode; confirm `/og/dev.png` renders; confirm `/health` and `/v1/meta` on the cron Worker.
 
