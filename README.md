@@ -1,4 +1,4 @@
-# comparemarketcapof.app
+# comparemarketcapof.com
 
 "What would the price of asset A be if it had the market cap of asset B?"
 

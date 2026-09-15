@@ -11,7 +11,7 @@
   // Shared with apps/cron — same namespace id in both wrangler.jsonc files. Read-only from this Worker.
   "kv_namespaces": [{ "binding": "SNAPSHOT", "id": "7a4189d9beec418fa3343aaadbfee257" }],
   "vars": {
-    "PUBLIC_SITE_ORIGIN": "https://comparemarketcapof.app",
-    "PUBLIC_API_ORIGIN": "https://api.comparemarketcapof.app"
+    "PUBLIC_SITE_ORIGIN": "https://comparemarketcapof.com",
+    "PUBLIC_API_ORIGIN": "https://api.comparemarketcapof.com"
   }
 }

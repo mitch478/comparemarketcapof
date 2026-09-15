@@ -1,4 +1,4 @@
-# DESIGN.md — comparemarketcapof.app
+# DESIGN.md — comparemarketcapof.com
 
 Source of truth for the visual system. Derived from `Design/README.md` (Figma handoff)
 with the overrides in the build brief, which win wherever they conflict. Tokens live in

@@ -1,4 +1,4 @@
-# PLAN.md — comparemarketcapof.app working plan
+# PLAN.md — comparemarketcapof.com working plan
 
 Rules for every phase:
 - Work stops at the end of each phase. Nathan tests, then says "go" (or asks for changes) before the next phase starts.
@@ -83,7 +83,7 @@ How Nathan tests: paste a comparison URL into a social preview debugger; use eac
 - `llms.txt`.
 - `<AffiliateSlot>` driven by `config/affiliates.ts`, shipped empty, region gating via `CF-IPCountry`.
 - **Umami** (free plan) — cookieless script tag in the base layout.
-- Custom domains: `comparemarketcapof.app` → web, `api.comparemarketcapof.app` → cron. Cron Trigger verified in production.
+- Custom domains: `comparemarketcapof.com` → web, `api.comparemarketcapof.com` → cron. Cron Trigger verified in production.
 - README runbook: bindings, secrets, forcing a refresh, rolling back.
 
 How Nathan tests: hit the API from a browser, confirm domains resolve, check analytics dashboard receives a pageview.

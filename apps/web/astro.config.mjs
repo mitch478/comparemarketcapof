@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://comparemarketcapof.app',
+  site: 'https://comparemarketcapof.com',
   // Server-rendered by default; static pages opt in with `export const prerender = true`.
   output: 'server',
   adapter: cloudflare({ imageService: 'compile' }),

@@ -13,7 +13,7 @@ export const GET: APIRoute = async () => {
 
   const html = `
     <div style="display:flex;flex-direction:column;justify-content:space-between;width:1200px;height:630px;padding:56px;background:#744AE3;color:#F6F6F6;font-family:Inter;">
-      <div style="display:flex;font-family:Bungee;font-size:32px;color:#E7E7E7;">Comparemarketcapof.app</div>
+      <div style="display:flex;font-family:Bungee;font-size:32px;color:#E7E7E7;">Comparemarketcapof.com</div>
       <div style="display:flex;flex-direction:column;">
         <div style="display:flex;font-size:36px;">Solana with the market cap of Bitcoin</div>
         <div style="display:flex;font-size:140px;color:rgb(217,255,29);margin-top:8px;">$2,457</div>
