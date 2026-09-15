@@ -1,0 +1,40 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'What would the price of asset A be if it had the market cap of asset B?' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bungee&family=Instrument+Sans:wght@400;600&family=Inter:wght@400;600;700&display=swap"
+    />
+    <slot name="head" />
+  </head>
+  <body class="min-h-dvh bg-base-100 text-base-content font-body">
+    <header class="bg-primary rounded-b-[3px] px-4 py-[22px] text-center">
+      <a href="/" class="font-display text-[20px] tracking-[0.5px] text-header-text no-underline">
+        Comparemarketcapof.app
+      </a>
+    </header>
+    <main class="mx-auto w-full max-w-[430px] px-6 pb-16">
+      <slot />
+    </main>
+    <footer class="mx-auto w-full max-w-[430px] px-6 pb-10 text-xs text-muted font-ui">
+      <p>Not financial advice. Data from CoinGecko.</p>
+    </footer>
+  </body>
+</html>

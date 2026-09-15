@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "comparemarketcapof-web",
+  "account_id": "ce057056c7417d4c2adac1dd382aa1e8",
+  // Unified entrypoint from the adapter — handles astro dev, build and deploy.
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-08-20",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "workers_dev": true,
+  // Shared with apps/cron — same namespace id in both wrangler.jsonc files. Read-only from this Worker.
+  "kv_namespaces": [{ "binding": "SNAPSHOT", "id": "7a4189d9beec418fa3343aaadbfee257" }],
+  "vars": {
+    "PUBLIC_SITE_ORIGIN": "https://comparemarketcapof.app",
+    "PUBLIC_API_ORIGIN": "https://api.comparemarketcapof.app"
+  }
+}

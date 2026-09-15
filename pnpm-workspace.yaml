@@ -1,0 +1,10 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Native binaries that need their postinstall scripts (pnpm 12 blocks unlisted ones).
+allowBuilds:
+  esbuild: true
+  workerd: true
+  "@tailwindcss/oxide": true
+  sharp: true

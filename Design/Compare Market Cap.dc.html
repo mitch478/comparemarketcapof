@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Instrument+Sans:wght@400;500&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: rgb(174,170,212); }
+  a { color: rgb(116,74,227); } a:hover { color: rgb(84,46,190); }
+</style>
+</helmet>
+<div style="min-height: 100vh; background: rgb(174,170,212); display: flex; flex-direction: column; align-items: center; font-family: Inter, sans-serif; padding-bottom: 48px;">
+  <header style="width: 100%; box-sizing: border-box; background: rgb(116,74,227); border-radius: 0 0 3px 3px; padding: 22px 16px; text-align: center;">
+    <span style="font-family: Bungee, sans-serif; font-size: 20px; color: rgb(231,231,231); letter-spacing: 0.5px;">Comparemarketcapof.app</span>
+  </header>
+  <div style="width: 100%; max-width: 430px; padding: 0 24px; box-sizing: border-box;">
+    <h1 style="font-family: Bungee, sans-serif; font-weight: 400; font-size: 36px; line-height: 1.15; color: rgb(0,0,0); margin: 40px 0 0; text-wrap: pretty;">Compare market cap of A and B crypto</h1>
+    <p style="font-family: 'Instrument Sans', sans-serif; font-size: 20px; line-height: 1.25; color: rgb(0,0,0); text-align: center; margin: 28px 0 36px;">Easy way to compare market cap of crypto tokens — select the coins below</p>
+    <div style="border-radius: 12px; background: linear-gradient(180deg, rgb(116,74,227) 1.8%, rgb(189,177,238) 88%); box-shadow: 17px 0px 18px 0px rgba(0,0,0,0.25); padding: 44px 28px 36px; display: flex; flex-direction: column; align-items: center; gap: 0;">
+      <div style="position: relative; width: 100%;">
+        <button onClick="{{ toggleA }}" style="width: 100%; height: 55px; border: none; border-radius: 10px; background: rgb(116,74,227); box-shadow: 10px 4px 4px 0px rgba(0,0,0,0.25); color: rgb(246,246,246); font-family: 'Instrument Sans', sans-serif; font-size: 15px; letter-spacing: 1px; cursor: pointer;">{{ aSymbol }} ▾</button>
+        <sc-if value="{{ pickerAOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; top: 60px; left: 0; right: 0; max-height: 264px; overflow-y: auto; background: rgb(255,250,250); border-radius: 10px; box-shadow: 0px 8px 24px rgba(0,0,0,0.35); z-index: 20;">
+            <sc-for list="{{ coinListA }}" as="c" hint-placeholder-count="5">
+              <div onClick="{{ c.pick }}" style="display: flex; align-items: center; gap: 10px; padding: 11px 14px; cursor: pointer; font-size: 15px; color: rgb(23,23,23); border-bottom: 1px solid rgb(236,235,245);" style-hover="background: rgb(236,235,245);">
+                <span style="font-weight: 700; width: 52px;">{{ c.symbol }}</span>
+                <span style="color: rgb(90,90,110);">{{ c.name }}</span>
+                <span style="margin-left: auto; font-size: 13px; color: rgb(116,74,227);">{{ c.capLabel }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <div style="font-family: Inter, sans-serif; font-size: 33px; color: rgb(0,0,0); margin: 22px 0;">VS</div>
+      <div style="position: relative; width: 100%;">
+        <button onClick="{{ toggleB }}" style="width: 100%; height: 55px; border: none; border-radius: 10px; background: rgb(116,74,227); box-shadow: 10px 4px 4px 0px rgba(0,0,0,0.25); color: rgb(255,255,255); font-family: 'Instrument Sans', sans-serif; font-size: 15px; letter-spacing: 1px; cursor: pointer;">{{ bSymbol }} ▾</button>
+        <sc-if value="{{ pickerBOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; top: 60px; left: 0; right: 0; max-height: 264px; overflow-y: auto; background: rgb(255,250,250); border-radius: 10px; box-shadow: 0px 8px 24px rgba(0,0,0,0.35); z-index: 20;">
+            <sc-for list="{{ coinListB }}" as="c" hint-placeholder-count="5">
+              <div onClick="{{ c.pick }}" style="display: flex; align-items: center; gap: 10px; padding: 11px 14px; cursor: pointer; font-size: 15px; color: rgb(23,23,23); border-bottom: 1px solid rgb(236,235,245);" style-hover="background: rgb(236,235,245);">
+                <span style="font-weight: 700; width: 52px;">{{ c.symbol }}</span>
+                <span style="color: rgb(90,90,110);">{{ c.name }}</span>
+                <span style="margin-left: auto; font-size: 13px; color: rgb(116,74,227);">{{ c.capLabel }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <p style="font-family: Inter, sans-serif; font-weight: 700; font-size: 16px; line-height: 1.2; color: rgb(255,255,255); text-align: center; margin: 36px 0 8px;">If {{ aSymbol }} reaches the current<br>market cap of {{ bSymbol }}</p>
+      <div style="font-family: Inter, sans-serif; font-weight: 700; font-size: 36px; color: rgb(217,255,29); text-align: center;">{{ projected }}</div>
+      <div style="width: 100%; display: flex; flex-direction: column; gap: 26px; margin-top: 40px;">
+        <sc-for list="{{ statRows }}" as="row" hint-placeholder-count="2">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 41px; height: 40px; border-radius: 50%; background: rgb(14,14,14); color: rgb(255,255,255); display: flex; align-items: center; justify-content: center; font-family: Inter, sans-serif; font-weight: 700; font-size: 12px; flex-shrink: 0;">{{ row.symbolShort }}</div>
+            <div style="display: flex; flex-direction: column; gap: 4px; min-width: 90px;">
+              <span style="font-size: 15px; color: rgb(0,0,0); letter-spacing: 0.5px;">PRICE</span>
+              <span style="font-size: 16px; font-weight: 700; color: rgb(23,23,23);">{{ row.price }}</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px; margin-left: auto; text-align: right;">
+              <span style="font-size: 15px; color: rgb(0,0,0); letter-spacing: 0.5px;">MARKET CAP</span>
+              <span style="font-size: 16px; font-weight: 700; color: rgb(23,23,23);">{{ row.cap }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ showBuy }}" hint-placeholder-val="{{ true }}">
+        <button style="margin-top: 40px; width: 139px; height: 42px; border: none; border-radius: 10px; background: rgb(116,74,227); box-shadow: 10px 4px 4px 0px rgba(0,0,0,0.25); color: rgb(255,255,255); font-family: Inter, sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 1px; cursor: pointer;" style-hover="background: rgb(96,56,205);">BUY {{ aSymbol }}</button>
+      </sc-if>
+    </div>
+    <p style="font-size: 12px; color: rgb(23,23,23); opacity: 0.55; text-align: center; margin-top: 28px;">Demo data — top 20 coins by market cap. Not financial advice.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 430, &quot;height&quot;: 953}, &quot;showBuyButton&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;}, &quot;pickerSort&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;Market cap&quot;, &quot;A–Z&quot;], &quot;default&quot;: &quot;Market cap&quot;, &quot;tsType&quot;: &quot;string&quot;}}">
+const COINS = [
+  { symbol: "BTC", name: "Bitcoin", price: 115200, cap: 2.29e12 },
+  { symbol: "ETH", name: "Ethereum", price: 4420, cap: 533e9 },
+  { symbol: "XRP", name: "XRP", price: 3.02, cap: 179e9 },
+  { symbol: "USDT", name: "Tether", price: 1.0, cap: 171e9 },
+  { symbol: "SOL", name: "Solana", price: 235, cap: 127e9 },
+  { symbol: "BNB", name: "BNB", price: 890, cap: 124e9 },
+  { symbol: "USDC", name: "USD Coin", price: 1.0, cap: 72e9 },
+  { symbol: "DOGE", name: "Dogecoin", price: 0.27, cap: 40.6e9 },
+  { symbol: "ADA", name: "Cardano", price: 0.92, cap: 33.4e9 },
+  { symbol: "TRX", name: "TRON", price: 0.35, cap: 30.1e9 },
+  { symbol: "LINK", name: "Chainlink", price: 24.5, cap: 16.6e9 },
+  { symbol: "AVAX", name: "Avalanche", price: 31.0, cap: 13.1e9 },
+  { symbol: "XLM", name: "Stellar", price: 0.41, cap: 12.8e9 },
+  { symbol: "SUI", name: "Sui", price: 3.6, cap: 12.6e9 },
+  { symbol: "LTC", name: "Litecoin", price: 118, cap: 9.0e9 },
+  { symbol: "TON", name: "Toncoin", price: 3.4, cap: 8.6e9 },
+  { symbol: "SHIB", name: "Shiba Inu", price: 0.000014, cap: 8.2e9 },
+  { symbol: "DOT", name: "Polkadot", price: 4.4, cap: 6.7e9 },
+  { symbol: "UNI", name: "Uniswap", price: 9.8, cap: 6.2e9 },
+  { symbol: "POL", name: "Polygon", price: 0.26, cap: 2.7e9 },
+];
+function fmtCap(n) {
+  if (n >= 1e12) return "$" + (n / 1e12).toFixed(2) + "T";
+  if (n >= 1e9) return "$" + (n / 1e9).toFixed(1) + "B";
+  return "$" + (n / 1e6).toFixed(0) + "M";
+}
+function fmtPrice(n) {
+  if (n >= 1000) return "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  if (n >= 1) return "$" + n.toFixed(2);
+  if (n >= 0.01) return "$" + n.toFixed(3);
+  return "$" + n.toPrecision(2);
+}
+class Component extends DCLogic {
+  state = { a: "SOL", b: "ETH", open: null };
+  coin(sym) { return COINS.find((c) => c.symbol === sym); }
+  list(side) {
+    const sort = this.props.pickerSort ?? "Market cap";
+    const arr = sort === "A\u2013Z" ? [...COINS].sort((x, y) => x.symbol.localeCompare(y.symbol)) : COINS;
+    return arr.map((c) => ({
+      symbol: c.symbol, name: c.name, capLabel: fmtCap(c.cap),
+      pick: () => this.setState({ [side]: c.symbol, open: null }),
+    }));
+  }
+  renderVals() {
+    const a = this.coin(this.state.a), b = this.coin(this.state.b);
+    const mult = b.cap / a.cap;
+    const projPrice = a.price * mult;
+    const multLabel = mult >= 10 ? "x" + Math.round(mult) : "x" + mult.toPrecision(2);
+    return {
+      aSymbol: a.symbol, bSymbol: b.symbol,
+      pickerAOpen: this.state.open === "a", pickerBOpen: this.state.open === "b",
+      toggleA: () => this.setState((s) => ({ open: s.open === "a" ? null : "a" })),
+      toggleB: () => this.setState((s) => ({ open: s.open === "b" ? null : "b" })),
+      coinListA: this.list("a"), coinListB: this.list("b"),
+      projected: fmtPrice(projPrice) + " (" + multLabel + ")",
+      statRows: [a, b].map((c) => ({
+        symbolShort: c.symbol.slice(0, 4), price: fmtPrice(c.price), cap: fmtCap(c.cap),
+      })),
+      showBuy: this.props.showBuyButton ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

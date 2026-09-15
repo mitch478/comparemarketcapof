@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+/*
+  Design tokens — see /DESIGN.md. Flat neo-brutalist: solid colours, hard offset
+  shadows, 2px borders, no gradients. Lime is reserved for the implied price only.
+
+  DaisyUI supplies component primitives (btn, card, dropdown, menu, table, badge).
+  The `cmc` themes below map DaisyUI's semantic colours onto our palette; hard
+  shadows and borders are applied as utilities on top because DaisyUI's are soft.
+*/
+@plugin "daisyui" {
+  themes: cmc --default, cmc-dark --prefersdark;
+  logs: false;
+}
+
+@plugin "daisyui/theme" {
+  name: "cmc";
+  default: true;
+  color-scheme: light;
+
+  --color-base-100: rgb(255 250 250);   /* paper */
+  --color-base-200: rgb(246 242 242);
+  --color-base-300: rgb(236 235 245);   /* divider */
+  --color-base-content: rgb(14 14 14);  /* ink */
+  --color-primary: #744ae3;             /* purple */
+  --color-primary-content: rgb(246 246 246);
+  --color-secondary: rgb(14 14 14);
+  --color-secondary-content: rgb(246 246 246);
+  --color-accent: rgb(217 255 29);      /* lime — implied price only */
+  --color-accent-content: rgb(14 14 14);
+  --color-neutral: rgb(14 14 14);
+  --color-neutral-content: rgb(246 246 246);
+  --color-info: #744ae3;
+  --color-info-content: rgb(246 246 246);
+  --color-success: rgb(28 140 80);
+  --color-success-content: rgb(255 255 255);
+  --color-warning: rgb(214 140 0);
+  --color-warning-content: rgb(14 14 14);
+  --color-error: rgb(200 40 40);
+  --color-error-content: rgb(255 255 255);
+
+  --radius-selector: 10px;
+  --radius-field: 10px;   /* pills, buttons, inputs */
+  --radius-box: 12px;     /* cards, dropdowns */
+  --size-selector: 0.25rem;
+  --size-field: 0.3125rem; /* 55px-tall btn-lg pills */
+  --border: 2px;
+  --depth: 0;             /* no soft shadows */
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "cmc-dark";
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: rgb(14 14 14);
+  --color-base-200: rgb(23 23 23);
+  --color-base-300: rgb(40 40 52);
+  --color-base-content: rgb(246 246 246);
+  --color-primary: #744ae3;
+  --color-primary-content: rgb(246 246 246);
+  --color-secondary: rgb(246 246 246);
+  --color-secondary-content: rgb(14 14 14);
+  --color-accent: rgb(217 255 29);
+  --color-accent-content: rgb(14 14 14);
+  --color-neutral: rgb(246 246 246);
+  --color-neutral-content: rgb(14 14 14);
+  --color-info: #744ae3;
+  --color-info-content: rgb(246 246 246);
+  --color-success: rgb(60 190 120);
+  --color-success-content: rgb(14 14 14);
+  --color-warning: rgb(240 180 40);
+  --color-warning-content: rgb(14 14 14);
+  --color-error: rgb(240 90 90);
+  --color-error-content: rgb(14 14 14);
+
+  --radius-selector: 10px;
+  --radius-field: 10px;
+  --radius-box: 12px;
+  --size-selector: 0.25rem;
+  --size-field: 0.3125rem;
+  --border: 2px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@theme {
+  /* Named aliases used outside DaisyUI components */
+  --color-purple: #744ae3;
+  --color-purple-hover: rgb(96 56 205);
+  --color-lime: rgb(217 255 29);
+  --color-muted: rgb(90 90 110);
+  --color-header-text: rgb(231 231 231);
+
+  /* Type */
+  --font-display: "Bungee", "Impact", "Arial Black", sans-serif;
+  --font-ui: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --text-hero: 4rem;            /* 64 */
+  --text-hero--line-height: 1;
+  --text-hero-mobile: 3rem;     /* 48 */
+  --text-hero-mobile--line-height: 1;
+  --text-h1: 1.5rem;            /* 24 */
+  --text-h1--line-height: 1.2;
+  --text-lg: 1.25rem;           /* 20 */
+  --text-base: 1rem;            /* 16 */
+  --text-ui: 0.9375rem;         /* 15 */
+  --text-sm: 0.8125rem;         /* 13 */
+  --text-xs: 0.75rem;           /* 12 */
+
+  /* Hard shadows (no blur). Colour follows the theme's neutral. */
+  --shadow-card: 8px 8px 0 var(--color-neutral);
+  --shadow-pill: 6px 6px 0 var(--color-neutral);
+  --shadow-dropdown: 4px 4px 0 var(--color-neutral);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-muted: rgb(170 170 190);
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Every numeric element gets tabular figures so digits don't shift width on refresh. */
+  .num, [data-num] {
+    font-family: var(--font-body);
+    font-feature-settings: "tnum" 1;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Neo-brutalist control: DaisyUI btn + 2px ink border + hard shadow, pressed state slides into the shadow. */
+@utility brutal {
+  border: 2px solid var(--color-neutral);
+  box-shadow: var(--shadow-pill);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+@utility brutal-pressed {
+  transform: translate(3px, 3px);
+  box-shadow: 3px 3px 0 var(--color-neutral);
+}

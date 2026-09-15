@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "comparemarketcapof-cron",
+  "account_id": "ce057056c7417d4c2adac1dd382aa1e8",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-20",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "workers_dev": true,
+  // Shared with apps/web — same namespace id in both wrangler.jsonc files.
+  "kv_namespaces": [{ "binding": "SNAPSHOT", "id": "7a4189d9beec418fa3343aaadbfee257" }],
+  // Hourly (decided 2026-09-15): fits the CoinGecko free tier even at 2,000 coins (8 calls/hour).
+  // The 15-minute page cache is independent of this.
+  "triggers": { "crons": ["0 * * * *"] },
+  "vars": {
+    "SNAPSHOT_SOURCE": "coingecko"
+  }
+  // Secrets (set with `wrangler secret put`): REFRESH_SECRET, COINGECKO_API_KEY (optional)
+}

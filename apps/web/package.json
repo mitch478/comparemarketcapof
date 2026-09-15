@@ -1,0 +1,39 @@
+{
+  "name": "@cmc/web",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro build && wrangler dev",
+    "deploy": "astro build && wrangler deploy",
+    "typecheck": "astro check",
+    "lint": "astro check",
+    "test": "echo \"(web tests arrive in Phase 2 — Playwright smoke)\"",
+    "astro": "astro",
+    "cf-typegen": "wrangler types"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.3.1",
+    "@astrojs/react": "^6.0.5",
+    "@cmc/core": "workspace:*",
+    "astro": "^7.3.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "workers-og": "^0.0.27"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "daisyui": "^5.7.37",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0",
+    "wrangler": "^4.131.0"
+  }
+}
