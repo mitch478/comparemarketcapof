@@ -90,6 +90,8 @@
   --color-purple: #744ae3;
   --color-purple-hover: rgb(96 56 205);
   --color-lime: rgb(217 255 29);
+  /* Implied price when the multiplier is below 1. Most saturated red that clears AA large-text on the purple card (3.2:1). */
+  --color-coral: rgb(255 178 160);
   --color-muted: rgb(90 90 110);
   --color-header-text: rgb(231 231 231);
 

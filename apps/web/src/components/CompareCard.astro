@@ -17,7 +17,7 @@ const t = comparisonCopy(c);
     />
 
     <p class="mt-9 text-center font-body font-bold text-base">{t.resultLine}</p>
-    <p class="num mt-3 text-center font-body font-bold text-hero-mobile sm:text-hero text-accent break-words" data-implied-price>
+    <p class:list={['num mt-3 text-center font-body font-bold text-hero-mobile sm:text-hero break-words', c.direction === 'down' ? 'text-coral' : 'text-accent']} data-implied-price data-direction={c.direction}>
       {t.impliedPriceText}
     </p>
     {t.multiplierLine && <p class="num mt-2 text-center font-body text-lg">{t.multiplierLine}</p>}

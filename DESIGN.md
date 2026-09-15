@@ -17,7 +17,8 @@ no gradients anywhere, no blurred shadows.
 | `ink` | `rgb(14,14,14)` | `rgb(246,246,246)` | Text, borders, hard shadows |
 | `purple` | `#744AE3` | same | Compare card, buttons, pills, header bar |
 | `purple-hover` | `rgb(96,56,205)` | same | Hover on purple controls |
-| `lime` | `rgb(217,255,29)` | same | **Implied price only.** Nothing else is lime. |
+| `lime` | `rgb(217,255,29)` | same | **Implied price only**, when the multiplier is ≥ 1. Nothing else is lime. |
+| `coral` | `rgb(255,178,160)` | same | **Implied price only**, when the multiplier is < 1 ("would drop to"). Most saturated red that clears AA large-text on purple (3.2:1). |
 | `on-purple` | `rgb(246,246,246)` | same | Text on purple surfaces |
 | `muted` | `rgb(90,90,110)` | `rgb(170,170,190)` | Secondary text |
 | `divider` | `rgb(236,235,245)` | `rgb(40,40,52)` | Row dividers |
@@ -51,14 +52,14 @@ Scale (px): **52** hero implied price (40 on mobile; was 64/48, reduced 2026-09-
 ## Comparison page hierarchy (top to bottom)
 
 1. **H1** — the dynamic sentence: "Solana with the market cap of Bitcoin". Bungee 24.
-2. **Compare card** — picker A, "VS", picker B.
+2. **Compare card** — picker A, swap button (two vertical arrows; reverses the pair), picker B. No "VS" and no separate reverse button (changed 2026-09-15).
 3. **Result line** (white, Inter 16): "If SOL reached BTC's current market cap, one SOL would be worth" — or "would drop to" when the multiplier is below 1.
-4. **Implied price** — 52px lime (40 mobile), tabular figures. The single most important element on the page.
+4. **Implied price** — 52px (40 mobile), tabular figures. Lime when the multiplier is ≥ 1, coral when it's below 1. The single most important element on the page.
 5. **Multiplier** — 20px white, own line: "17× today's price" / "0.31× today's price".
 6. **Stat rows** per coin: real logo from the API, price, market cap, circulating supply. Plus an FDV variant line when both assets have a total supply, and a "based on circulating supply" note.
 7. **Share row** — copy link, share to X, download image.
 8. **`<AffiliateSlot>`** — renders nothing until a partner is configured.
-9. **Internal-linking blocks** — "More comparisons for A", "Other assets at B's market cap", "Reverse this comparison".
+9. **Internal-linking blocks** — "More comparisons for A", "Other assets at B's market cap".
 10. **Data stamp** — "data as of HH:MM UTC" on every comparison.
 
 ## Removed from the mock

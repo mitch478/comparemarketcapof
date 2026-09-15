@@ -38,7 +38,6 @@ const othersAtB = topAssets(snap, 12, b.id).filter((x) => x.id !== a.id).slice(0
   <nav aria-label="More comparisons" class="mt-12 flex flex-col gap-8">
     <LinkBlock heading={`More comparisons for ${a.name}`} links={moreForA} />
     <LinkBlock heading={`Other assets at ${b.name}'s market cap`} links={othersAtB} />
-    <a class="btn btn-primary brutal self-start font-ui" href={comparePath(b.slug, a.slug)}>Reverse: {b.name} at {a.name}'s market cap</a>
   </nav>
 
   <div class="mt-10"><DataStamp updatedAt={snap.updatedAt} source={snap.source} /></div>

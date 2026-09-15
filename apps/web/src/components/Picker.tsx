@@ -54,10 +54,35 @@ export default function Picker({ a: initialA = null, b: initialB = null }: Props
     }
   }
 
+  function swap() {
+    if (a && b) {
+      window.location.href = comparePath(b.slug, a.slug);
+      return;
+    }
+    setA(b);
+    setB(a);
+    setOpenSide(null);
+  }
+
   return (
     <div className="flex flex-col items-stretch">
       <Combobox side="a" selected={a} open={openSide === 'a'} setOpen={(o) => setOpenSide(o ? 'a' : null)} onPick={(x) => pick('a', x)} />
-      <div className="num font-bold text-[33px] text-neutral text-center my-4" aria-hidden="true">VS</div>
+      <div className="flex justify-center my-3">
+        <button
+          type="button"
+          className="btn btn-circle brutal w-14 h-14 bg-base-100 text-base-content hover:bg-base-200 disabled:opacity-60"
+          onClick={swap}
+          disabled={!a && !b}
+          aria-label={a && b ? `Swap: ${b.name} with the market cap of ${a.name}` : 'Swap assets'}
+          title="Swap"
+          data-swap
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M8 3v18M8 3L4 7M8 3l4 4" />
+            <path d="M16 21V3M16 21l-4-4M16 21l4-4" />
+          </svg>
+        </button>
+      </div>
       <Combobox side="b" selected={b} open={openSide === 'b'} setOpen={(o) => setOpenSide(o ? 'b' : null)} onPick={(x) => pick('b', x)} />
     </div>
   );

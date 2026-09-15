@@ -49,3 +49,10 @@ test('hub, index, 404 and same-asset redirect', async ({ page }) => {
   await page.goto('/bitcoin/with-the-market-cap-of/bitcoin');
   await expect(page).toHaveURL(/\/bitcoin$/);
 });
+
+test('swap button reverses the comparison', async ({ page }) => {
+  await page.goto('/solana/with-the-market-cap-of/bitcoin');
+  await page.getByRole('button', { name: /^Swap/ }).click();
+  await page.waitForURL(/\/bitcoin\/with-the-market-cap-of\/solana$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Bitcoin with the market cap of Solana');
+});
