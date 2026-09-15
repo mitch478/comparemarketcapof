@@ -101,7 +101,11 @@ export class CoinGeckoProvider implements AssetProvider {
       if (this.opts.apiKey) headers['x-cg-demo-api-key'] = this.opts.apiKey;
       const res = await this.opts.fetch(this.pageUrl(page), { headers });
       if (!res.ok) {
-        throw new Error(`coingecko: page ${page} responded ${res.status} ${res.statusText}`);
+        const body = (await res.text().catch(() => "")).slice(0, 200).replace(/\s+/g, " ");
+        const diag = ["cf-cache-status", "cf-ray", "retry-after", "content-type"]
+          .map((h) => `${h}=${res.headers.get(h) ?? "-"}`)
+          .join(" ");
+        throw new Error(`coingecko: page ${page} responded ${res.status} ${res.statusText} [${diag}] ${body}`);
       }
       const parsed = CoinGeckoMarketsPage.safeParse(await res.json());
       if (!parsed.success) {

@@ -36,7 +36,7 @@ How Nathan tests: open the two workers.dev URLs on a phone; check `/dev/design` 
 
 Built: `CoinGeckoProvider` (paginated, deduped, validated, throws on any failure), `refreshSnapshot` (fetch → validate → MIN_ASSETS guard → KV write, meta last; failure leaves KV untouched), `POST /refresh` with timing-safe secret check, `compare.ts` + `copy.ts` (shared sentences for page/API/OG), cached `getSnapshot()` / `getPickerList()`, `pnpm seed` and `pnpm sample` scripts, 49 tests.
 
-Blocker for production data: CoinGecko returns 429 to keyless requests from Workers. Needs the free Demo API key set as the `COINGECKO_API_KEY` secret. Verified end-to-end locally (scheduled handler → real API → 498 assets in 3s).
+Production data live since 2026-09-15 07:37 UTC: `COINGECKO_API_KEY` secret set, manual refresh returned 498 assets in 2.8s. Keyless requests from Workers get 429 (shared egress quota), so the key is required in prod.
 
 
 - `apps/cron`: `CoinGeckoProvider` implementing `AssetProvider` (all pages of `/coins/markets`, not just 500 — paginate until empty, respect free-tier rate limits with a delay between pages), zod validation, KV write of `snapshot:crypto` + `snapshot:meta`, never overwrite on failure, `console.error` on failure, `POST /refresh` guarded by `x-refresh-secret`.
