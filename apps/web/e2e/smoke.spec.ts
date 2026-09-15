@@ -5,7 +5,7 @@ test('home → pick pair → comparison page', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Compare market cap');
 
   // Both pickers start empty
-  await expect(page.getByRole('button', { name: /Asset to reprice\. Choose/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Choose an asset/ })).toBeVisible();
   await page.getByRole('button', { name: /Asset to reprice/ }).click();
   const boxA = page.getByRole('combobox', { name: /Asset to reprice/ });
   await expect(boxA).toBeFocused();

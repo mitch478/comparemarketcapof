@@ -135,7 +135,9 @@ function Combobox({ side, selected, open, setOpen, onPick }: {
   }
 
   const label = side === 'a' ? 'Asset to reprice' : 'Market cap to use';
-  const buttonLabel = selected ? `${label}: ${selected.name} (${selected.symbol}). Change` : `${label}. Choose an asset`;
+  // Accessible name must contain the visible text (WCAG 2.5.3), so visible text comes first.
+  const placeholder = side === 'a' ? 'Choose an asset' : 'Choose a market cap';
+  const buttonLabel = selected ? `${selected.symbol} ${selected.name} — ${label}. Change` : `${placeholder} — ${label}`;
 
   return (
     <div ref={rootRef} className="relative w-full">
@@ -154,10 +156,10 @@ function Combobox({ side, selected, open, setOpen, onPick }: {
           <>
             {selected.image ? <img src={selected.image} alt="" width={28} height={28} className="rounded-full border-2 border-neutral bg-base-100" /> : null}
             <span>{selected.symbol}</span>
-            <span className="opacity-80 font-normal truncate">{selected.name}</span>
+            <span className="font-normal truncate">{selected.name}</span>
           </>
         ) : (
-          <span className="font-normal opacity-90">{side === 'a' ? 'Choose an asset' : 'Choose a market cap'}</span>
+          <span className="font-normal">{placeholder}</span>
         )}
         <span aria-hidden="true" className="ml-auto">▾</span>
       </button>

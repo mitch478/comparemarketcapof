@@ -66,7 +66,19 @@ How Nathan tests: `astro dev` against seeded KV, click through on desktop and ph
 
 ---
 
-## Phase 3 — SEO
+## Phase 3 — SEO  ← DONE 2026-09-15, awaiting Nathan's test
+
+Built: Cache API middleware (edge cache keyed by build id, TTL from each page's `s-maxage`), `<Seo>` with OG/Twitter tags, JSON-LD `WebPage` + `BreadcrumbList` on comparison pages, `sitemap-index.xml` → `sitemap-[n].xml` (10,442 URLs in 3 chunks: static pages, /coins, 498 hubs, every asset × top-20), `robots.txt`, self-hosted latin woff2 fonts with preload (no Google Fonts request), `/dev/design` removed, contrast fixes (white wordmark, no translucent text on purple), stat rows restructured for valid `<dl>`, picker accessible names include visible text.
+
+Lighthouse 13, mobile emulation, live on workers.dev (Cache API confirmed active there too):
+
+| Page | Perf | A11y | Best practices | SEO | FCP | LCP | TBT | CLS |
+|---|---|---|---|---|---|---|---|---|
+| /solana/with-the-market-cap-of/bitcoin | 100 | see below | 100 | 100 | 0.9 s | 1.5 s | 0 ms | 0.001 |
+| / | 100 | 100 | 100 | 100 | 1.0 s | 1.3 s | 0 ms | 0 |
+
+Bug found and fixed on the way: the edge cache served HTML from the previous deploy whose hashed assets no longer existed (CSS/JS 404, island failed to hydrate). Cache keys now include a per-build id.
+
 
 - `<Seo>` component: title pattern, description with numbers, OG tags, canonical.
 - JSON-LD `WebPage` + `BreadcrumbList` on comparison pages.

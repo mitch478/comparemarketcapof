@@ -1,15 +1,14 @@
 ---
-/**
- * Per-page metadata. Phase 3 adds OG image, JSON-LD and canonical handling; the props are
- * already here so pages don't change shape later.
- */
+/** Per-page metadata: title, description, canonical, Open Graph, Twitter card. */
 interface Props {
   title: string;
   description: string;
   canonical?: string | undefined;
+  /** Absolute URL of the OG image (Phase 4 wires the dynamic one). */
+  image?: string | undefined;
   noindex?: boolean;
 }
-const { title, description, canonical, noindex = false } = Astro.props;
+const { title, description, canonical, image, noindex = false } = Astro.props;
 const fullTitle = title.includes('comparemarketcapof') ? title : `${title} | comparemarketcapof`;
 const url = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
 ---
@@ -22,4 +21,10 @@ const url = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
 <meta property="og:url" content={url} />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="comparemarketcapof" />
-<meta name="twitter:card" content="summary_large_image" />
+{image && <meta property="og:image" content={image} />}
+{image && <meta property="og:image:width" content="1200" />}
+{image && <meta property="og:image:height" content="630" />}
+<meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+{image && <meta name="twitter:image" content={image} />}

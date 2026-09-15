@@ -6,9 +6,10 @@ import CompareCard from '../../../components/CompareCard.astro';
 import ShareRow from '../../../components/ShareRow.astro';
 import LinkBlock from '../../../components/LinkBlock.astro';
 import DataStamp from '../../../components/DataStamp.astro';
+import JsonLd from '../../../components/JsonLd.astro';
 import { findAsset, loadSnapshot, topAssets } from '../../../lib/data';
 import { cacheHeaders } from '../../../lib/http';
-import { comparePath, hubPath } from '../../../lib/routes';
+import { absolute, comparePath, hubPath } from '../../../lib/routes';
 
 const snap = await loadSnapshot();
 const a = findAsset(snap, Astro.params.a);
@@ -20,14 +21,38 @@ const c = compare(a, b, snap.updatedAt);
 const t = comparisonCopy(c);
 cacheHeaders(Astro.response.headers);
 
-const url = new URL(Astro.url.pathname, Astro.site).toString();
+const origin = Astro.site!.origin;
+const url = absolute(Astro.url.pathname, origin);
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: t.title,
+    description: t.description,
+    url,
+    isPartOf: { '@type': 'WebSite', name: 'comparemarketcapof', url: origin },
+    ...(snap.updatedAt ? { dateModified: snap.updatedAt } : {}),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: origin + '/' },
+      { '@type': 'ListItem', position: 2, name: a.name, item: absolute(hubPath(a.slug), origin) },
+      { '@type': 'ListItem', position: 3, name: `with the market cap of ${b.name}`, item: url },
+    ],
+  },
+];
 const moreForA = topAssets(snap, 12, a.id).filter((x) => x.id !== b.id).slice(0, 10)
   .map((x) => ({ href: comparePath(a.slug, x.slug), label: `${a.name} with the market cap of ${x.name}` }));
 const othersAtB = topAssets(snap, 12, b.id).filter((x) => x.id !== a.id).slice(0, 10)
   .map((x) => ({ href: comparePath(x.slug, b.slug), label: `${x.name} with the market cap of ${b.name}` }));
 ---
 <Base title={t.title}>
-  <Fragment slot="head"><Seo title={t.title} description={t.description} canonical={url} /></Fragment>
+  <Fragment slot="head">
+    <Seo title={t.title} description={t.description} canonical={url} />
+    <JsonLd data={jsonLd} />
+  </Fragment>
 
   <h1 class="font-display text-h1 mt-10 leading-tight">{t.h1}</h1>
   <div class="mt-8"><CompareCard comparison={c} /></div>

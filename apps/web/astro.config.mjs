@@ -21,5 +21,8 @@ export default defineConfig({
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
+    // Unique per build. The edge-cache key includes it so a new deploy never serves
+    // HTML that references the previous deploy's hashed assets.
+    define: { __BUILD_ID__: JSON.stringify(Date.now().toString(36)) },
   },
 });
