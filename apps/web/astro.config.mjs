@@ -9,7 +9,11 @@ export default defineConfig({
   site: 'https://comparemarketcapof.com',
   // Server-rendered by default; static pages opt in with `export const prerender = true`.
   output: 'server',
-  adapter: cloudflare({ imageService: 'compile' }),
+  adapter: cloudflare({
+    imageService: 'compile',
+    // Share local KV state with apps/cron so `pnpm --filter @cmc/cron seed` feeds astro dev too.
+    persistState: { path: '../../.wrangler/state' },
+  }),
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],

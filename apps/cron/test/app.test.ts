@@ -1,6 +1,10 @@
 import { SELF, env } from 'cloudflare:test';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { KV_KEYS } from '@cmc/core';
+
+beforeEach(async () => {
+  for (const k of Object.values(KV_KEYS)) await env.SNAPSHOT.delete(k);
+});
 
 describe('cron worker http', () => {
   it('serves /health', async () => {
@@ -13,6 +17,7 @@ describe('cron worker http', () => {
     const res = await SELF.fetch('https://example.com/v1/meta');
     expect(res.status).toBe(200);
     expect(res.headers.get('cache-control')).toContain('s-maxage=900');
+    expect(res.headers.get('access-control-allow-origin')).toBe('*');
     expect(await res.json()).toMatchObject({ updatedAt: null, count: 0 });
   });
 
@@ -28,5 +33,12 @@ describe('cron worker http', () => {
   it('404s as JSON', async () => {
     const res = await SELF.fetch('https://example.com/nope');
     expect(res.status).toBe(404);
+  });
+});
+
+describe('POST /refresh auth', () => {
+  it('rejects a missing or wrong secret', async () => {
+    expect((await SELF.fetch('https://example.com/refresh', { method: 'POST' })).status).toBe(401);
+    expect((await SELF.fetch('https://example.com/refresh', { method: 'POST', headers: { 'x-refresh-secret': 'nope' } })).status).toBe(401);
   });
 });

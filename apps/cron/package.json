@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "wrangler dev --persist-to ../../.wrangler/state",
+    "seed": "tsx scripts/seed.ts",
+    "sample": "tsx scripts/sample.ts",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -18,6 +20,7 @@
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.22.0",
     "@types/node": "^24.0.0",
+    "tsx": "^4.23.13",
     "typescript": "^5.9.0",
     "vitest": "^4.1.0",
     "wrangler": "^4.131.0"

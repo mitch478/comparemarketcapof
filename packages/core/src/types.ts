@@ -44,3 +44,12 @@ export const SnapshotMeta = z.object({
   source: z.string(),
 });
 export type SnapshotMeta = z.infer<typeof SnapshotMeta>;
+
+/** The slice of an asset the search picker needs. Stored separately so the island never loads the full snapshot. */
+export const PickerAsset = Asset.pick({ id: true, slug: true, symbol: true, name: true, image: true, rank: true, marketCap: true });
+export type PickerAsset = z.infer<typeof PickerAsset>;
+export const PickerList = z.array(PickerAsset);
+
+export function toPickerAsset(a: Asset): PickerAsset {
+  return { id: a.id, slug: a.slug, symbol: a.symbol, name: a.name, image: a.image, rank: a.rank, marketCap: a.marketCap };
+}

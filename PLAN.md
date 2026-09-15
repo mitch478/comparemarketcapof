@@ -32,7 +32,12 @@ How Nathan tests: open the two workers.dev URLs on a phone; check `/dev/design` 
 
 ---
 
-## Phase 1 — Data + logic
+## Phase 1 — Data + logic  ← DONE 2026-09-15, awaiting Nathan's test
+
+Built: `CoinGeckoProvider` (paginated, deduped, validated, throws on any failure), `refreshSnapshot` (fetch → validate → MIN_ASSETS guard → KV write, meta last; failure leaves KV untouched), `POST /refresh` with timing-safe secret check, `compare.ts` + `copy.ts` (shared sentences for page/API/OG), cached `getSnapshot()` / `getPickerList()`, `pnpm seed` and `pnpm sample` scripts, 49 tests.
+
+Blocker for production data: CoinGecko returns 429 to keyless requests from Workers. Needs the free Demo API key set as the `COINGECKO_API_KEY` secret. Verified end-to-end locally (scheduled handler → real API → 498 assets in 3s).
+
 
 - `apps/cron`: `CoinGeckoProvider` implementing `AssetProvider` (all pages of `/coins/markets`, not just 500 — paginate until empty, respect free-tier rate limits with a delay between pages), zod validation, KV write of `snapshot:crypto` + `snapshot:meta`, never overwrite on failure, `console.error` on failure, `POST /refresh` guarded by `x-refresh-secret`.
 - `packages/core`: `compare.ts` (implied price, multiplier, FDV variant, A===B, missing supply, <1 multiplier), `getSnapshot()` with module-scope TTL cache, tests for everything including edge cases.

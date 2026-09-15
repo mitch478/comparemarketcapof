@@ -2,6 +2,8 @@
 export const KV_KEYS = {
   /** Full `Asset[]` snapshot (JSON). */
   snapshotCrypto: 'snapshot:crypto',
+  /** `PickerAsset[]` — trimmed list for the search island (JSON). */
+  snapshotPicker: 'snapshot:picker',
   /** `SnapshotMeta` (JSON). */
   snapshotMeta: 'snapshot:meta',
 } as const;

@@ -13,7 +13,11 @@
   // The 15-minute page cache is independent of this.
   "triggers": { "crons": ["0 * * * *"] },
   "vars": {
-    "SNAPSHOT_SOURCE": "coingecko"
+    "SNAPSHOT_SOURCE": "coingecko",
+    // How many assets to keep. 250 per CoinGecko page; raise to 2000 when ready.
+    "ASSET_LIMIT": "500",
+    // Refuse to overwrite KV if a refresh returns fewer than this many assets (truncated/partial data guard).
+    "MIN_ASSETS": "100"
   }
   // Secrets (set with `wrangler secret put`): REFRESH_SECRET, COINGECKO_API_KEY (optional)
 }
