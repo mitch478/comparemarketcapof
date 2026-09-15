@@ -135,9 +135,7 @@ function Combobox({ side, selected, open, setOpen, onPick }: {
   }
 
   const label = side === 'a' ? 'Asset to reprice' : 'Market cap to use';
-  // Accessible name must contain the visible text (WCAG 2.5.3), so visible text comes first.
   const placeholder = side === 'a' ? 'Choose an asset' : 'Choose a market cap';
-  const buttonLabel = selected ? `${selected.symbol} ${selected.name} — ${label}. Change` : `${placeholder} — ${label}`;
 
   return (
     <div ref={rootRef} className="relative w-full">
@@ -146,16 +144,17 @@ function Combobox({ side, selected, open, setOpen, onPick }: {
         className="btn btn-primary btn-lg brutal w-full justify-start gap-3 font-ui text-ui tracking-[1px]"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={buttonLabel}
         onClick={() => setOpen(!open)}
         onPointerEnter={() => void loadList()}
         onFocus={() => void loadList()}
         data-picker={side}
       >
+        {/* Accessible name = visible text + hidden context, so WCAG 2.5.3 holds by construction. */}
+        <span className="sr-only">{label}: </span>
         {selected ? (
           <>
             {selected.image ? <img src={selected.image} alt="" width={28} height={28} className="rounded-full border-2 border-neutral bg-base-100" /> : null}
-            <span>{selected.symbol}</span>
+            <span>{selected.symbol}</span>{' '}
             <span className="font-normal truncate">{selected.name}</span>
           </>
         ) : (
