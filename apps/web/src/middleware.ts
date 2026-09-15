@@ -13,8 +13,13 @@ import { defineMiddleware } from 'astro:middleware';
  */
 export const onRequest = defineMiddleware(async (context, next) => {
   const { request } = context;
-  if (request.method !== 'GET') return next();
   const url = new URL(request.url);
+  // Canonical host: www → apex, permanent.
+  if (url.hostname === 'www.comparemarketcapof.com') {
+    url.hostname = 'comparemarketcapof.com';
+    return Response.redirect(url.toString(), 301);
+  }
+  if (request.method !== 'GET') return next();
   if (url.search) return next(); // nothing indexable has query params; don't cache variants
   if (url.pathname.startsWith('/_astro/')) return next(); // immutable assets, handled by the assets layer
 

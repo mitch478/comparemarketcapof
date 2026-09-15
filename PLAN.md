@@ -105,7 +105,7 @@ How Nathan tests: paste a comparison URL into a social preview debugger; use eac
 - `llms.txt`.
 - `<AffiliateSlot>` driven by `config/affiliates.ts`, shipped empty, region gating via `CF-IPCountry`.
 - **Umami** (free plan) — cookieless script tag in the base layout.
-- Custom domains: `comparemarketcapof.com` → web, `api.comparemarketcapof.com` → cron. Cron Trigger verified in production.
+- ~~Custom domains~~ Done early (2026-09-15): `comparemarketcapof.com` + `www` (301 → apex) → web, `api.comparemarketcapof.com` → cron, all declared in wrangler.jsonc as custom domains. Cron Trigger verified in production.
 - README runbook: bindings, secrets, forcing a refresh, rolling back.
 
 How Nathan tests: hit the API from a browser, confirm domains resolve, check analytics dashboard receives a pageview.

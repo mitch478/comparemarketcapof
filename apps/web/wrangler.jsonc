@@ -8,6 +8,11 @@
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
   "workers_dev": true,
+  // Custom domains (Cloudflare manages DNS + certs). www redirects to the apex in src/middleware.ts.
+  "routes": [
+    { "pattern": "comparemarketcapof.com", "custom_domain": true },
+    { "pattern": "www.comparemarketcapof.com", "custom_domain": true }
+  ],
   // Shared with apps/cron — same namespace id in both wrangler.jsonc files. Read-only from this Worker.
   "kv_namespaces": [{ "binding": "SNAPSHOT", "id": "7a4189d9beec418fa3343aaadbfee257" }],
   "vars": {

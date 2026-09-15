@@ -7,6 +7,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
   "workers_dev": true,
+  "routes": [{ "pattern": "api.comparemarketcapof.com", "custom_domain": true }],
   // Shared with apps/web — same namespace id in both wrangler.jsonc files.
   "kv_namespaces": [{ "binding": "SNAPSHOT", "id": "7a4189d9beec418fa3343aaadbfee257" }],
   // Hourly (decided 2026-09-15): fits the CoinGecko free tier even at 2,000 coins (8 calls/hour).
