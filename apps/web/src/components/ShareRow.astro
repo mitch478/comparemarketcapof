@@ -1,12 +1,13 @@
 ---
-/** Copy link + share to X. "Download image" arrives with the OG route in Phase 4. */
-interface Props { url: string; text: string }
-const { url, text } = Astro.props;
+/** Copy link, share to X, download the OG card. */
+interface Props { url: string; text: string; image?: string | undefined; imageName?: string | undefined }
+const { url, text, image, imageName = 'comparemarketcapof.png' } = Astro.props;
 const x = `https://twitter.com/intent/tweet?${new URLSearchParams({ text: `${text} ${url}` }).toString()}`;
 ---
 <div class="flex flex-wrap gap-4 font-ui" data-share>
   <button type="button" class="btn btn-primary brutal" data-copy={url}>Copy link</button>
   <a class="btn btn-primary brutal" href={x} target="_blank" rel="noopener noreferrer">Share to X</a>
+  {image && <a class="btn btn-primary brutal" href={image} download={imageName}>Download image</a>}
 </div>
 <script>
   document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {

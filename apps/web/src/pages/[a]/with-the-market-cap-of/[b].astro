@@ -9,7 +9,7 @@ import DataStamp from '../../../components/DataStamp.astro';
 import JsonLd from '../../../components/JsonLd.astro';
 import { findAsset, loadSnapshot, topAssets } from '../../../lib/data';
 import { cacheHeaders } from '../../../lib/http';
-import { absolute, comparePath, hubPath } from '../../../lib/routes';
+import { absolute, comparePath, hubPath, ogPath } from '../../../lib/routes';
 
 const snap = await loadSnapshot();
 const a = findAsset(snap, Astro.params.a);
@@ -23,6 +23,7 @@ cacheHeaders(Astro.response.headers);
 
 const origin = Astro.site!.origin;
 const url = absolute(Astro.url.pathname, origin);
+const ogImage = absolute(ogPath(a.slug, b.slug), origin);
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -50,13 +51,13 @@ const othersAtB = topAssets(snap, 12, b.id).filter((x) => x.id !== a.id).slice(0
 ---
 <Base title={t.title}>
   <Fragment slot="head">
-    <Seo title={t.title} description={t.description} canonical={url} />
+    <Seo title={t.title} description={t.description} canonical={url} image={ogImage} />
     <JsonLd data={jsonLd} />
   </Fragment>
 
   <h1 class="font-display text-h1 mt-10 leading-tight">{t.h1}</h1>
   <div class="mt-8"><CompareCard comparison={c} /></div>
-  <div class="mt-8"><ShareRow url={url} text={t.shareText} /></div>
+  <div class="mt-8"><ShareRow url={url} text={t.shareText} image={ogPath(a.slug, b.slug)} imageName={`${a.slug}-with-the-market-cap-of-${b.slug}.png`} /></div>
 
   <!-- <AffiliateSlot placement="comparison" /> — Phase 5, ships empty -->
 

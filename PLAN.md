@@ -90,7 +90,10 @@ How Nathan tests: view source on a comparison page, fetch the sitemaps, run Ligh
 
 ---
 
-## Phase 4 — OG + share
+## Phase 4 — OG + share  ← DONE 2026-09-16, awaiting Nathan's test
+
+Built: `/og/[a]/[b].png` (workers-og: both logos inlined as data URIs, H1 sentence, implied price in lime/coral, multiplier, stat line; 404 for unknown/same pair; edge-cached 15 min), `/og/default.png` for non-comparison pages, `og:image` + Twitter large card on every page, share row now has Download image. Fonts for Satori fetched once per isolate. e2e test covers meta + image + 404.
+
 
 - `/og/[a]/[b].png` via workers-og with both logos, implied price, multiplier, site name; same cache headers.
 - Share row: copy link, share to X with prefilled text, download image.

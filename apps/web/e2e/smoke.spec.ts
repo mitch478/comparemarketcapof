@@ -56,3 +56,16 @@ test('swap button reverses the comparison', async ({ page }) => {
   await page.waitForURL(/\/bitcoin\/with-the-market-cap-of\/solana$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Bitcoin with the market cap of Solana');
 });
+
+test('OG image and metadata', async ({ page, request }) => {
+  await page.goto('/solana/with-the-market-cap-of/bitcoin');
+  const og = await page.locator('meta[property="og:image"]').getAttribute('content');
+  expect(og).toMatch(/\/og\/solana\/bitcoin\.png$/);
+  const res = await request.get('/og/solana/bitcoin.png');
+  expect(res.status()).toBe(200);
+  expect(res.headers()['content-type']).toContain('image/png');
+  expect((await res.body()).byteLength).toBeGreaterThan(10_000);
+  const missing = await request.get('/og/solana/not-a-coin.png');
+  expect(missing.status()).toBe(404);
+  await expect(page.getByRole('link', { name: 'Download image' })).toHaveAttribute('href', '/og/solana/bitcoin.png');
+});
