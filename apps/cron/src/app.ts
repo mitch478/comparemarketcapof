@@ -26,6 +26,16 @@ app.get('/v1/meta', async (c) => {
   return c.json(parsed.data, 200, CACHE_HEADERS);
 });
 
+/**
+ * The asset list, trimmed to what a picker needs (id, slug, symbol, name, image, rank, marketCap).
+ * Read as text and passed through untouched: no parse/serialise round-trip for ~500 rows.
+ */
+app.get('/v1/assets', async (c) => {
+  const raw = await c.env.SNAPSHOT.get(KV_KEYS.snapshotPicker, 'text');
+  if (!raw) return c.json({ error: 'snapshot not available yet' }, 503, { 'Cache-Control': 'no-store' });
+  return c.body(raw, 200, { 'content-type': 'application/json; charset=utf-8', ...CACHE_HEADERS });
+});
+
 /** Force a snapshot refresh. Requires `x-refresh-secret` to match the REFRESH_SECRET secret. */
 app.post('/refresh', async (c) => {
   const expected = c.env.REFRESH_SECRET;
