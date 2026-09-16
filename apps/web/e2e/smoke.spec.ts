@@ -32,6 +32,7 @@ test('keyboard-only picker', async ({ page }) => {
   const box = page.getByRole('combobox', { name: /Market cap to use/ });
   await expect(box).toBeFocused();
   await box.fill('tether');
+  await expect(page.getByRole('option', { name: /Tether/ }).first()).toBeVisible();
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('ArrowUp');
   await page.keyboard.press('Enter');
