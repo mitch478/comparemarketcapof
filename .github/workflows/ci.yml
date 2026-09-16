@@ -16,6 +16,30 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm test
-      - run: pnpm --filter @cmc/web build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests (core) and Worker tests (cron, in workerd)
+        run: pnpm --filter @cmc/core --filter @cmc/cron test
+
+      - name: Seed local KV from the committed fixture
+        run: pnpm --filter @cmc/cron seed
+
+      - name: Build web
+        run: pnpm --filter @cmc/web build
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @cmc/web exec playwright install --with-deps chromium
+
+      - name: Smoke tests (web, Playwright against astro preview)
+        run: pnpm --filter @cmc/web test
+        env:
+          ASTRO_PREVIEW_BACKGROUND: '0'
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/web/test-results
+          if-no-files-found: ignore

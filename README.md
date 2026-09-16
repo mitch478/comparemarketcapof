@@ -1,5 +1,7 @@
 # comparemarketcapof.com
 
+[![CI](https://github.com/mitch478/comparemarketcapof/actions/workflows/ci.yml/badge.svg)](https://github.com/mitch478/comparemarketcapof/actions/workflows/ci.yml) · Live at [comparemarketcapof.com](https://comparemarketcapof.com)
+
 "What would the price of asset A be if it had the market cap of asset B?"
 
 See `PLAN.md` for the phased plan and `DESIGN.md` for the visual system.
@@ -21,4 +23,8 @@ pnpm --filter @cmc/web run deploy
 pnpm --filter @cmc/cron run deploy
 ```
 
-Secrets and env vars are listed in `.env.example`. The full runbook lands in Phase 5.
+Secrets and env vars are listed in `.env.example` (real values go in `.env` and `apps/cron/.dev.vars`, both gitignored). The full runbook lands in Phase 5.
+
+## License
+
+MIT — see `LICENSE`.
